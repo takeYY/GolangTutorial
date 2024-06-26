@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  api:
+    container_name: golang_tutorial_api
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/usr/src/app
+    command: >
+      bash -c  'go run server.go'
