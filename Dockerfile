@@ -4,3 +4,5 @@ ARG APP_DIR="/usr/src/app"
 
 COPY . ${APP_DIR}
 WORKDIR ${APP_DIR}
+
+RUN go mod tidy
