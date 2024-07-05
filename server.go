@@ -2,6 +2,7 @@ package main
 
 import (
 	"golang_tutorial/src/apps/hello"
+	"golang_tutorial/src/apps/movie"
 	"golang_tutorial/src/apps/users"
 
 	"github.com/labstack/echo/v4"
@@ -16,6 +17,7 @@ func main() {
 
 	e.GET("/", hello.Hello)
 	e.GET("/users/:name", users.GetUserName)
+	e.GET("movies/get", movie.GetMovie)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }
