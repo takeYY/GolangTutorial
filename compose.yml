@@ -20,7 +20,7 @@ services:
     volumes:
       - mysql-volumes:/var/lib/mysql
       - ./mysql/entrypoint/:/docker-entrypoint-initdb.d
-    command: --default-authentication-plugin=mysql_native_password
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
       MYSQL_USER: "user"
       MYSQL_PASSWORD: "password"
