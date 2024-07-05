@@ -16,3 +16,7 @@ docker-compose up
 ### JSON
 
 - http://localhost:8000/users/John%20Doe
+
+### Get a Movie
+
+- http://localhost:8000/movies/get
