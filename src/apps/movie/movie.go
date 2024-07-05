@@ -81,7 +81,6 @@ func GetMovie(c echo.Context) error {
 		}
 	}()
 
-	// FIXME: 取得した映画情報が文字化けしている。。。
 	var mov Movie
 	tx.First(&mov)
 
