@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS db4test;
+CREATE DATABASE db4test;
+USE db4test;
