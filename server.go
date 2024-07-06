@@ -1,12 +1,12 @@
 package main
 
 import (
-	"golang_tutorial/src/apps/hello"
-	"golang_tutorial/src/apps/movie"
-	"golang_tutorial/src/apps/users"
-
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+	"golang_tutorial/src/hello"
+	"golang_tutorial/src/movie"
+	"golang_tutorial/src/users"
 )
 
 func main() {
