@@ -12,7 +12,7 @@ import (
 func TestHello(t *testing.T) {
 	e := echo.New()
 	rec := httptest.NewRecorder()
-	req := httptest.NewRequest(http.MethodGet, "/?pretty", nil)
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	c := e.NewContext(req, rec)
 
 	err := c.String(http.StatusOK, "Hello, World!")
