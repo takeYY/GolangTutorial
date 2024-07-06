@@ -17,6 +17,7 @@ func TestGetUserName(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/users/", nil)
 	c := e.NewContext(req, rec)
 
+	// NOTE: 関数のテストではなく、サーバを立ててテストした方が良いかも
 	err := c.JSON(http.StatusOK, User{Name: "John Doe", Description: "説明のテストですよ"})
 	if assert.NoError(t, err) {
 		assert.Equal(t, http.StatusOK, rec.Code)
