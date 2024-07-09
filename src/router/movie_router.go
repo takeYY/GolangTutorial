@@ -1,32 +1,27 @@
 package router
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 
+	"golang_tutorial/src/model"
 	"golang_tutorial/src/repository"
 )
 
 
-
-type Movie struct {
-	ID 				int 						`gorm:"primary_key;column:id"`
-	CreatedAt time.Time 			`gorm:"column:created_at"`
-	UpdatedAt time.Time 			`gorm:"column:updated_at"`
-	Title 		string 					`gorm:"column:title"`
-	Overview 	sql.NullString 	`gorm:"column:overview"`
+type repoes struct {
+	movieRepo repository.MovieRepository
 }
+
 
 func GetMovie(c echo.Context) error {
 	log.Info("accessed get movie")
 
-	dbSess := repository.ConnectDB()
-	tx := dbSess.Begin()
+	dbSession := repository.ConnectDB()
+	tx := dbSession.Begin()
 
 	var err error
 	defer func() {
@@ -37,10 +32,17 @@ func GetMovie(c echo.Context) error {
 		}
 	}()
 
-	var mov Movie
-	tx.First(&mov)
+	repoes := repoes{
+		movieRepo: repository.MovieRepository{Session: tx},
+	}
 
-	log.Info(fmt.Printf("first movie is %s", mov.Title))
+	id := 1
+	movie, err := repoes.movieRepo.GetMovieById(&id)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, model.ErrorResponse{Message: "movie not found"})
+	}
 
-	return c.JSON(http.StatusOK, mov)
+	log.Info(fmt.Printf("first movie is %s", movie.Title))
+
+	return c.JSON(http.StatusOK, movie)
 }
