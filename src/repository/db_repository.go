@@ -1,20 +1,17 @@
-package movie
+package repository
 
 import (
 	"database/sql"
 	"fmt"
-	"net/http"
 	"time"
 
-	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
-
-	default_mysql "github.com/go-sql-driver/mysql"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+
+	default_mysql "github.com/go-sql-driver/mysql"
 )
 
 
@@ -54,37 +51,4 @@ func ConnectDB() *gorm.DB {
 	}
 
 	return gormDB
-}
-
-
-
-type Movie struct {
-	ID 				int 						`gorm:"primary_key;column:id"`
-	CreatedAt time.Time 			`gorm:"column:created_at"`
-	UpdatedAt time.Time 			`gorm:"column:updated_at"`
-	Title 		string 					`gorm:"column:title"`
-	Overview 	sql.NullString 	`gorm:"column:overview"`
-}
-
-func GetMovie(c echo.Context) error {
-	log.Info("accessed get movie")
-
-	dbSess := ConnectDB()
-	tx := dbSess.Begin()
-
-	var err error
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		} else {
-			tx.Commit()
-		}
-	}()
-
-	var mov Movie
-	tx.First(&mov)
-
-	log.Info(fmt.Printf("first movie is %s", mov.Title))
-
-	return c.JSON(http.StatusOK, mov)
 }
