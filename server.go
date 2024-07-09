@@ -6,7 +6,7 @@ import (
 
 	"golang_tutorial/src/hello"
 	"golang_tutorial/src/movie"
-	"golang_tutorial/src/users"
+	"golang_tutorial/src/router"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	e.GET("/", hello.Hello)
-	e.GET("/users/:name", users.GetUserName)
+	e.GET("/users/:name", router.GetUserName)
 	e.GET("movies/get", movie.GetMovie)
 
 	e.Logger.Fatal(e.Start(":8000"))

@@ -1,8 +1,12 @@
-package users
+package repository
 
-import "fmt"
+import (
+	"fmt"
 
-var us = []*User{
+	"golang_tutorial/src/model"
+)
+
+var us = []*model.User{
 	{
 		Name: "John Doe", Description: "テストの説明_1",
 	},
@@ -11,7 +15,7 @@ var us = []*User{
 	},
 }
 
-func GetUser(name *string) (u *User, err error) {
+func GetUser(name *string) (u *model.User, err error) {
 	for _, u := range us {
 		if u.Name == *name {
 			return u, nil
