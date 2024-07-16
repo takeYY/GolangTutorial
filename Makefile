@@ -25,3 +25,7 @@ down_v:
 .PHONY: test
 test:
 	docker-compose run --rm api go test -v ./src/...
+
+.PHONY: gen_models
+gen_models:
+	docker-compose run --rm api go run scripts/generate_models.go
