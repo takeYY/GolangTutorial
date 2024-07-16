@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/labstack/gommon/log"
@@ -22,10 +23,10 @@ func ConnectDB() *gorm.DB {
 	}
 
 	c := default_mysql.Config{
-		DBName:    "db4test",
-		User:      "user",
-		Passwd:    "password",
-		Addr:      "db:3306",
+		DBName:    os.Getenv("DB_NAME"),
+		User:      os.Getenv("DB_USER"),
+		Passwd:    os.Getenv("DB_PWD"),
+		Addr:      os.Getenv("DB_HOST"),
 		Net:       "tcp",
 		ParseTime: true,
 		AllowNativePasswords: true,

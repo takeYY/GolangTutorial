@@ -11,6 +11,8 @@ services:
       - .:/usr/src/app
     command: >
       bash -c  'go run server.go'
+    env_file:
+      - .env
 
   db:
     image: mysql:8.0.32
