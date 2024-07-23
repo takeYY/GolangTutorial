@@ -12,4 +12,9 @@ CREATE TABLE movie
 );
 
 
-INSERT INTO movie (title, overview) VALUES ('ターミネーター', 'シュワちゃんカッコいい!!')
+INSERT INTO movie (title, overview) VALUES
+('ターミネーター', 'シュワちゃんカッコいい!!'),
+('ターミネーター2', '液体金属'),
+('ターミネーター3', 'T-X'),
+('ターミネーター4', 'マーカス!!')
+;
