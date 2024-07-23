@@ -15,7 +15,6 @@ import (
 	default_mysql "github.com/go-sql-driver/mysql"
 )
 
-
 func ConnectDB() *gorm.DB {
 	jst, err := time.LoadLocation("Asia/Tokyo")
 	if err != nil {
@@ -23,15 +22,15 @@ func ConnectDB() *gorm.DB {
 	}
 
 	c := default_mysql.Config{
-		DBName:    os.Getenv("DB_NAME"),
-		User:      os.Getenv("DB_USER"),
-		Passwd:    os.Getenv("DB_PWD"),
-		Addr:      os.Getenv("DB_HOST"),
-		Net:       "tcp",
-		ParseTime: true,
+		DBName:               os.Getenv("DB_NAME"),
+		User:                 os.Getenv("DB_USER"),
+		Passwd:               os.Getenv("DB_PWD"),
+		Addr:                 os.Getenv("DB_HOST"),
+		Net:                  "tcp",
+		ParseTime:            true,
 		AllowNativePasswords: true,
-		Collation: "utf8mb4_unicode_ci",
-		Loc:       jst,
+		Collation:            "utf8mb4_unicode_ci",
+		Loc:                  jst,
 	}
 
 	db, err := sql.Open("mysql", c.FormatDSN())

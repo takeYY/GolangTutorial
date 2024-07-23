@@ -11,11 +11,9 @@ import (
 	"golang_tutorial/src/repository"
 )
 
-
 type repoes struct {
 	movieRepo repository.MovieRepository
 }
-
 
 func GetMovie(c echo.Context) error {
 	log.Info("accessed get movie")

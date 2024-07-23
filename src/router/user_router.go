@@ -11,7 +11,6 @@ import (
 	"golang_tutorial/src/repository"
 )
 
-
 func GetUserName(c echo.Context) error {
 	log.Info("accessed get user name")
 
