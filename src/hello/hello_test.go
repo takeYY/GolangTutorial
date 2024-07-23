@@ -10,14 +10,20 @@ import (
 )
 
 func TestHello(t *testing.T) {
+	// --- Arrange --- //
 	e := echo.New()
-	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	req.Header.Set("Content-Type", "application/json")
+	rec := httptest.NewRecorder()
+
+	// --- Act --- //
 	c := e.NewContext(req, rec)
 
-	err := c.String(http.StatusOK, "Hello, World!")
-	if assert.NoError(t, err) {
-		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, "Hello, World!", rec.Body.String())
+	// --- Assert --- //
+	if err := Hello(c); err != nil {
+		t.Fatal(err)
 	}
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+	assert.Equal(t, "Hello, World!", rec.Body.String())
 }
