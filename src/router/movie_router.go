@@ -3,6 +3,7 @@ package router
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -34,7 +35,9 @@ func GetMovie(c echo.Context) error {
 		movieRepo: repository.MovieRepository{Session: tx},
 	}
 
-	id := 1
+	i64, _ := strconv.ParseInt(c.Param("id"), 10, 32)
+	id := int32(i64) // ParseInt が int64になるので再度キャストする
+
 	movie, err := repoes.movieRepo.GetMovieById(&id)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, model.ErrorResponse{Message: "movie not found"})

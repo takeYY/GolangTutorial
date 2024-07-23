@@ -16,7 +16,7 @@ func main() {
 
 	e.GET("/", hello.Hello)
 	e.GET("/users/:name", router.GetUserName)
-	e.GET("movies/get", router.GetMovie)
+	e.GET("movies/get/:id", router.GetMovie)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }
