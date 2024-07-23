@@ -19,4 +19,4 @@ docker-compose up
 
 ### Get a Movie
 
-- http://localhost:8000/movies/get
+- http://localhost:8000/movies/get/1
