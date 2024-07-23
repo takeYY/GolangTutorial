@@ -2,6 +2,7 @@ package repository
 
 import (
 	"golang_tutorial/src/model"
+	"golang_tutorial/src/query"
 
 	"gorm.io/gorm"
 )
@@ -10,12 +11,13 @@ type MovieRepository struct {
 	Session *gorm.DB
 }
 
-func (r *MovieRepository) GetMovieById(id *int) (*model.Movie, error) {
-	var result model.Movie
+func (r *MovieRepository) GetMovieById(id *int32) (*model.Movie, error) {
+	m := query.Use(r.Session).Movie
 
-	if err := r.Session.Where("id IN (?)", *id).First(&result).Error; err != nil {
+	result, err := m.Where(m.ID.Eq(*id)).First()
+	if err != nil {
 		return nil, err
 	}
 
-	return &result, nil
+	return result, nil
 }
