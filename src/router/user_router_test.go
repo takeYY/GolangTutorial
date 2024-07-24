@@ -58,5 +58,5 @@ func TestGetUserNameNotFound(t *testing.T) {
 	}
 
 	assert.Equal(t, http.StatusNotFound, rec.Code)
-	assert.JSONEq(t, `{"message":"invalid user is not found"}`, rec.Body.String())
+	assert.JSONEq(t, `{"message":"invalid user is not found."}`, rec.Body.String())
 }
