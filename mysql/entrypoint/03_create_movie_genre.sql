@@ -12,3 +12,15 @@ CREATE TABLE movie_genre
   foreign key (movie_id) references movie(id) on delete cascade,
   foreign key (genre_id) references genre(id) on delete cascade
 );
+
+
+INSERT INTO movie_genre (movie_id, genre_id) VALUES
+(1, 1),
+(1, 11),
+(1, 15),
+(4, 1),
+(4, 7),
+(4, 11),
+(4, 15),
+(4, 18)
+;
