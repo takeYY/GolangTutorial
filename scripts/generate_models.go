@@ -6,6 +6,8 @@ import (
 	"gorm.io/gen"
 )
 
+// TODO: movie と genre を結合した構造体を自動生成酢量にしたい
+// refs: https://zenn.dev/rescuenow/articles/da1cb5f574fb0c
 func main() {
 	g := gen.NewGenerator(gen.Config{
 		OutPath: "../src/query",
