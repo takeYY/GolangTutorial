@@ -16,6 +16,7 @@ func main() {
 	e.GET("/", handlers.Hello)
 	e.GET("/users/:name", handlers.GetUserName)
 	e.GET("movies/get/:id", handlers.GetMovie)
+	e.GET("/genres/:code", handlers.GetGenreByCode)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }
