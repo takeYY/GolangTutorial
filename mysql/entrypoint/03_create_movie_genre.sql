@@ -10,5 +10,5 @@ CREATE TABLE movie_genre
 
   primary key (id),
   foreign key (movie_id) references movie(id) on delete cascade,
-  foreign key (genre_id) references movie(id) on delete cascade
+  foreign key (genre_id) references genre(id) on delete cascade
 );
