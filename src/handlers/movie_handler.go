@@ -38,12 +38,12 @@ func GetMovie(c echo.Context) error {
 	i64, _ := strconv.ParseInt(c.Param("id"), 10, 32)
 	id := int32(i64) // ParseInt が int64になるので再度キャストする
 
-	movie, err := repoes.movieRepo.GetMovieById(&id)
+	movieWithGenres, err := repoes.movieRepo.GetMovieById(&id)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, model.ErrorResponse{Message: "movie not found"})
 	}
 
-	log.Info(fmt.Printf("first movie is %s", movie.Title))
+	log.Info(fmt.Printf("first movie is %s", movieWithGenres.Title))
 
-	return c.JSON(http.StatusOK, movie)
+	return c.JSON(http.StatusOK, movieWithGenres)
 }
