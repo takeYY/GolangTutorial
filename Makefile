@@ -25,6 +25,7 @@ down_v:
 .PHONY: test
 test:
 	docker-compose run --rm api gotest -v ./src/... -cover
+	docker-compose stop
 
 .PHONY: gen_models
 gen_models:
