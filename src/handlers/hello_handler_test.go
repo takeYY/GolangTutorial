@@ -1,4 +1,4 @@
-package hello
+package handlers
 
 import (
 	"net/http"
