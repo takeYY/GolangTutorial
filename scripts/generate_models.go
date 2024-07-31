@@ -20,15 +20,22 @@ func main() {
 
 	all := g.GenerateAllTable() // database to table model
 
-	// TODO: movie と genre の多対多の関係を作りたい...
 	// create movie with genres
 	genres_neo := g.GenerateModel("genre_neo")
 	movie_neo := g.GenerateModel("movie_neo", gen.FieldRelate(field.HasMany, "Genres_neo", genres_neo, &field.RelateConfig{
 		GORMTag: field.GormTag{"foreignKey": []string{"MovieRefer"}, "references": []string{"ID"}},
 	}))
 
+	// TODO: movie と genre の多対多の関係を作りたい...
+	// TODO: 作ったができているかわからんから確認すること!!
+	genres := g.GenerateModel("genre")
+	movie := g.GenerateModel("movie", gen.FieldRelate(field.Many2Many, "Genres", genres, &field.RelateConfig{
+		RelateSlice: true,
+		GORMTag:     field.GormTag{"many2many": []string{"movie_genre"}},
+	}))
+
 	// Generate basic type-safe DAO API for struct `model.User` following conventions
-	g.ApplyBasic(genres_neo, movie_neo)
+	g.ApplyBasic(genres_neo, movie_neo, movie)
 	g.ApplyBasic(all...)
 
 	// Generate the code

@@ -17,6 +17,7 @@ type Movie struct {
 	UpdatedAt time.Time `gorm:"column:updated_at;not null;default:CURRENT_TIMESTAMP" json:"updated_at"`
 	Title     string    `gorm:"column:title;not null" json:"title"`
 	Overview  string    `gorm:"column:overview" json:"overview"`
+	Genres    []Genre   `gorm:"many2many:movie_genre" json:"genres"`
 }
 
 // TableName Movie's table name

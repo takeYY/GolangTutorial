@@ -32,6 +32,11 @@ func newMovie(db *gorm.DB, opts ...gen.DOOption) movie {
 	_movie.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_movie.Title = field.NewString(tableName, "title")
 	_movie.Overview = field.NewString(tableName, "overview")
+	_movie.Genres = movieManyToManyGenres{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Genres", "model.Genre"),
+	}
 
 	_movie.fillFieldMap()
 
@@ -47,6 +52,7 @@ type movie struct {
 	UpdatedAt field.Time
 	Title     field.String
 	Overview  field.String
+	Genres    movieManyToManyGenres
 
 	fieldMap map[string]field.Expr
 }
@@ -84,12 +90,13 @@ func (m *movie) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (m *movie) fillFieldMap() {
-	m.fieldMap = make(map[string]field.Expr, 5)
+	m.fieldMap = make(map[string]field.Expr, 6)
 	m.fieldMap["id"] = m.ID
 	m.fieldMap["created_at"] = m.CreatedAt
 	m.fieldMap["updated_at"] = m.UpdatedAt
 	m.fieldMap["title"] = m.Title
 	m.fieldMap["overview"] = m.Overview
+
 }
 
 func (m movie) clone(db *gorm.DB) movie {
@@ -100,6 +107,77 @@ func (m movie) clone(db *gorm.DB) movie {
 func (m movie) replaceDB(db *gorm.DB) movie {
 	m.movieDo.ReplaceDB(db)
 	return m
+}
+
+type movieManyToManyGenres struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a movieManyToManyGenres) Where(conds ...field.Expr) *movieManyToManyGenres {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a movieManyToManyGenres) WithContext(ctx context.Context) *movieManyToManyGenres {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a movieManyToManyGenres) Session(session *gorm.Session) *movieManyToManyGenres {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a movieManyToManyGenres) Model(m *model.Movie) *movieManyToManyGenresTx {
+	return &movieManyToManyGenresTx{a.db.Model(m).Association(a.Name())}
+}
+
+type movieManyToManyGenresTx struct{ tx *gorm.Association }
+
+func (a movieManyToManyGenresTx) Find() (result []*model.Genre, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a movieManyToManyGenresTx) Append(values ...*model.Genre) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a movieManyToManyGenresTx) Replace(values ...*model.Genre) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a movieManyToManyGenresTx) Delete(values ...*model.Genre) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a movieManyToManyGenresTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a movieManyToManyGenresTx) Count() int64 {
+	return a.tx.Count()
 }
 
 type movieDo struct{ gen.DO }
