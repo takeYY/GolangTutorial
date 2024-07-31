@@ -4,13 +4,12 @@ import (
 	"golang_tutorial/src/repository"
 
 	"gorm.io/gen"
+	"gorm.io/gen/field"
 )
 
-// TODO: movie と genre を結合した構造体を自動生成酢量にしたい
-// refs: https://zenn.dev/rescuenow/articles/da1cb5f574fb0c
 func main() {
 	g := gen.NewGenerator(gen.Config{
-		OutPath: "../src/query",
+		OutPath: "./src/query",
 		Mode:    gen.WithoutContext,
 	})
 
@@ -21,7 +20,15 @@ func main() {
 
 	all := g.GenerateAllTable() // database to table model
 
+	// TODO: movie と genre の多対多の関係を作りたい...
+	// create movie with genres
+	genres_neo := g.GenerateModel("genre_neo")
+	movie_neo := g.GenerateModel("movie_neo", gen.FieldRelate(field.HasMany, "Genres_neo", genres_neo, &field.RelateConfig{
+		GORMTag: field.GormTag{"foreignKey": []string{"MovieRefer"}, "references": []string{"ID"}},
+	}))
+
 	// Generate basic type-safe DAO API for struct `model.User` following conventions
+	g.ApplyBasic(genres_neo, movie_neo)
 	g.ApplyBasic(all...)
 
 	// Generate the code
