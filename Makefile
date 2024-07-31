@@ -30,3 +30,4 @@ test:
 .PHONY: gen_models
 gen_models:
 	docker-compose run --rm api go run scripts/generate_models.go
+	docker-compose stop
