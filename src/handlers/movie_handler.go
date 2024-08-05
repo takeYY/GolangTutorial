@@ -47,3 +47,30 @@ func GetMovie(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, movieWithGenres)
 }
+
+func GetMovies(c echo.Context) error {
+	log.Info("accessed get movies")
+
+	dbSession := repository.ConnectDB()
+	tx := dbSession.Begin()
+
+	var err error
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
+
+	repoes := repoes{
+		movieRepo: repository.MovieRepository{Session: tx},
+	}
+
+	moviesWithGenres, err := repoes.movieRepo.GetMovies()
+	if err != nil {
+		return c.JSON(http.StatusNotFound, model.ErrorResponse{Message: "movies are not found"})
+	}
+
+	return c.JSON(http.StatusOK, moviesWithGenres)
+}
