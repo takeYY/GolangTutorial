@@ -19,10 +19,8 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:         db,
 		Genre:      newGenre(db, opts...),
-		GenreNeo:   newGenreNeo(db, opts...),
 		Movie:      newMovie(db, opts...),
 		MovieGenre: newMovieGenre(db, opts...),
-		MovieNeo:   newMovieNeo(db, opts...),
 	}
 }
 
@@ -30,10 +28,8 @@ type Query struct {
 	db *gorm.DB
 
 	Genre      genre
-	GenreNeo   genreNeo
 	Movie      movie
 	MovieGenre movieGenre
-	MovieNeo   movieNeo
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -42,10 +38,8 @@ func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:         db,
 		Genre:      q.Genre.clone(db),
-		GenreNeo:   q.GenreNeo.clone(db),
 		Movie:      q.Movie.clone(db),
 		MovieGenre: q.MovieGenre.clone(db),
-		MovieNeo:   q.MovieNeo.clone(db),
 	}
 }
 
@@ -61,28 +55,22 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:         db,
 		Genre:      q.Genre.replaceDB(db),
-		GenreNeo:   q.GenreNeo.replaceDB(db),
 		Movie:      q.Movie.replaceDB(db),
 		MovieGenre: q.MovieGenre.replaceDB(db),
-		MovieNeo:   q.MovieNeo.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
 	Genre      *genreDo
-	GenreNeo   *genreNeoDo
 	Movie      *movieDo
 	MovieGenre *movieGenreDo
-	MovieNeo   *movieNeoDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
 		Genre:      q.Genre.WithContext(ctx),
-		GenreNeo:   q.GenreNeo.WithContext(ctx),
 		Movie:      q.Movie.WithContext(ctx),
 		MovieGenre: q.MovieGenre.WithContext(ctx),
-		MovieNeo:   q.MovieNeo.WithContext(ctx),
 	}
 }
 
