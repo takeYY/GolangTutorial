@@ -42,13 +42,13 @@ func (r *MovieRepository) GetMovieById(id *int32) (*model.MovieWithGenres, error
 	return &movieWithGenre, nil
 }
 
-func (r *MovieRepository) GetMovies() ([]*model.Movie, error) {
-	m := query.Use(r.Session).Movie
+func (r *MovieRepository) GetMovies() ([]model.Movie, error) {
+	var movies []model.Movie
 
-	result, err := m.Find()
+	err := r.Session.Preload("Genres").Find(&movies).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return result, nil
+	return movies, nil
 }
