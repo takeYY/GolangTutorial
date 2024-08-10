@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/usr/src/app
     command: >
-      bash -c 'sleep 30 && go run ./cmd/server/main.go'
+      bash -c 'sleep 60 && go run ./cmd/server/main.go'
     env_file:
       - .env
     depends_on:
