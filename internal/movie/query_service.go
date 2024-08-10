@@ -48,3 +48,33 @@ func (qs *QueryService) GetMovieDetails(movieID *int32) (*MovieResponse, error) 
 
 	return movieResponse, nil
 }
+
+func (qs *QueryService) GetMovies() ([]MovieResponse, error) {
+	result, err := qs.MovieRepo.Find()
+	if err != nil {
+		return nil, err
+	}
+
+	var movies []MovieResponse
+	for _, res := range result {
+		var genres []Genre
+		for _, genre := range res.Genres {
+			g := Genre{
+				Code: genre.Code,
+				Name: genre.Name,
+			}
+
+			genres = append(genres, g)
+		}
+
+		m := MovieResponse{
+			ID:       res.ID,
+			Title:    res.Title,
+			Overview: res.Overview,
+			Genres:   genres,
+		}
+		movies = append(movies, m)
+	}
+
+	return movies, nil
+}

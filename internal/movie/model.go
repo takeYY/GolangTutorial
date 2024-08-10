@@ -11,4 +11,9 @@ type (
 		Overview string  `json:"overview"`
 		Genres   []Genre `json:"genres"`
 	}
+	NewMovie struct {
+		Title    string  `json:"title" validate:"required"`
+		Overview string  `json:"overview"`
+		Genres   []Genre `json:"genres"`
+	}
 )

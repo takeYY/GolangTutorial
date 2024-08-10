@@ -15,7 +15,7 @@ type (
 		queryService *QueryService
 	}
 	WriterHandler struct {
-		commandService *QueryService
+		commandService *CommandService
 	}
 	Handler struct {
 		ReaderHandler ReaderHandler
@@ -26,7 +26,7 @@ type (
 // 新しいHandlerを作成
 func NewHandler(rdb *config.Database, wdb *config.Database) *Handler {
 	queryService := NewQueryService(rdb)
-	commandService := NewQueryService(wdb)
+	commandService := NewCommandService(wdb)
 
 	return &Handler{
 		ReaderHandler: ReaderHandler{
@@ -42,8 +42,9 @@ func NewHandler(rdb *config.Database, wdb *config.Database) *Handler {
 func (h *Handler) RegisterRoutes(e *echo.Echo) {
 	// Read
 	e.GET("/movies/:id", h.ReaderHandler.GetMovie)
+	e.GET("/movies", h.ReaderHandler.GetMovies)
 	// Create, Update, Delete
-	// e.POST("/movies", h.WriterHandler.CreateMovie)
+	e.POST("/movie", h.WriterHandler.CreateMovie)
 }
 
 // 映画IDで映画情報を取得
@@ -66,9 +67,30 @@ func (rh *ReaderHandler) GetMovie(c echo.Context) error {
 	return c.JSON(http.StatusOK, movie)
 }
 
+func (rh *ReaderHandler) GetMovies(c echo.Context) error {
+	movies, err := rh.queryService.GetMovies()
+	if err != nil {
+		return c.JSON(http.StatusNotFound, common.ErrorResponse{
+			Message: "movies are not found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, movies)
+}
+
 // 映画を作成
-/*
 func (wh *WriterHandler) CreateMovie(c echo.Context) error {
+	var m NewMovie
+	if err := c.Bind(&m); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	movie, err := wh.commandService.CreateMovie(&m)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, common.ErrorResponse{
+			Message: "movie can not created",
+		})
+	}
+
 	return c.JSON(http.StatusOK, movie)
 }
-*/
