@@ -1,7 +1,9 @@
 package main
 
 import (
-	"golang_tutorial/src/repository"
+	"golang_tutorial/config"
+	"golang_tutorial/db"
+	"log"
 
 	"gorm.io/gen"
 	"gorm.io/gen/field"
@@ -9,11 +11,17 @@ import (
 
 func main() {
 	g := gen.NewGenerator(gen.Config{
-		OutPath: "./src/query",
-		Mode:    gen.WithoutContext,
+		OutPath:      "./query",
+		Mode:         gen.WithoutContext,
+		ModelPkgPath: "./model",
 	})
 
-	gormdb := repository.ConnectDB()
+	// 設定ファイルの読み込み
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		log.Fatalf("Error loading config: %v", err)
+	}
+	gormdb := db.ConnectDB(&cfg.ReaderDatabase)
 
 	// gormdb, _ := gorm.Open(mysql.Open("root:@(127.0.0.1:3306)/demo?charset=utf8mb4&parseTime=True&loc=Local"))
 	g.UseDB(gormdb) // reuse your gorm db
