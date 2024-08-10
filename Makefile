@@ -24,10 +24,12 @@ down_v:
 
 .PHONY: test
 test:
-	docker compose run --rm api gotest -v ./tests/... -cover
+	make up_d
+	docker compose exec api gotest -v ./tests/... -cover
 	docker compose stop
 
 .PHONY: gen_models
 gen_models:
-	docker compose run --rm api go run scripts/generate_models.go
+	make up_d
+	docker compose exec api go run scripts/generate_models.go
 	docker compose stop
