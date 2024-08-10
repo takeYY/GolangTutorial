@@ -19,7 +19,7 @@ jobs:
 
       - name: Setup Environment
         run: |
-          cp .example/env .env
+          cp .example.env .env
 
       - name: Build Image
         run: |
