@@ -21,11 +21,7 @@ jobs:
         run: |
           cp .example.env .env
 
-      - name: Build Image
-        run: |
-          make build
-
-      - name: Run Container
+      - name: Build Image & Run Container
         run: |
           docker compose --env-file .env up -d
 
