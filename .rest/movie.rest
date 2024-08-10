@@ -1,5 +1,9 @@
 @endpoint = http://localhost:8000
 
+GET {{endpoint}}/movies
+
+###
+
 GET {{endpoint}}/movies/1
 # {
 #     "id": 1,
@@ -52,3 +56,33 @@ GET {{endpoint}}/movies/4
 #         }
 #     ]
 # }
+
+###
+
+POST {{endpoint}}/movie
+content-type: application/json
+
+{
+    "title": "テストの映画",
+    "overview": "概要は割と適当です...",
+    "genres": []
+}
+
+###
+
+POST {{endpoint}}/movie
+content-type: application/json
+
+{
+    "overview": "概要は割と適当です...",
+    "genres": []
+}
+
+###
+
+POST {{endpoint}}/movie
+content-type: application/json
+
+{
+    "test_title": "パラメータの指定が間違えています"
+}
