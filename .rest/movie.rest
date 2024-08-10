@@ -1,0 +1,54 @@
+@endpoint = http://localhost:8000
+
+GET {{endpoint}}/movies/1
+# {
+#     "id": 1,
+#     "title": "ターミネーター",
+#     "overview": "シュワちゃんカッコいい!!",
+#     "genres": [
+#         {
+#         "code": "action",
+#         "name": "アクション"
+#         },
+#         {
+#         "code": "horror",
+#         "name": "ホラー"
+#         },
+#         {
+#         "code": "sf",
+#         "name": "SF"
+#         }
+#     ]
+# }
+
+
+###
+
+GET {{endpoint}}/movies/4
+# {
+#     "id": 4,
+#     "title": "ターミネーター4",
+#     "overview": "マーカス!!",
+#     "genres": [
+#         {
+#             "code": "action",
+#             "name": "アクション"
+#         },
+#         {
+#             "code": "drama",
+#             "name": "ドラマ"
+#         },
+#         {
+#             "code": "horror",
+#             "name": "ホラー"
+#         },
+#         {
+#             "code": "sf",
+#             "name": "SF"
+#         },
+#         {
+#             "code": "war",
+#             "name": "戦争"
+#         }
+#     ]
+# }
