@@ -1,6 +1,7 @@
 package movie
 
 import (
+	"context"
 	"golang_tutorial/config"
 	"golang_tutorial/internal/common"
 	"net/http"
@@ -24,9 +25,9 @@ type (
 )
 
 // 新しいHandlerを作成
-func NewHandler(rdb *config.Database, wdb *config.Database) *Handler {
-	queryService := NewQueryService(rdb)
-	commandService := NewCommandService(wdb)
+func NewHandler(cfg *config.Config) *Handler {
+	queryService := NewQueryService(cfg)
+	commandService := NewCommandService(cfg)
 
 	return &Handler{
 		ReaderHandler: ReaderHandler{
@@ -57,7 +58,7 @@ func (rh *ReaderHandler) GetMovie(c echo.Context) error {
 	}
 	id := int32(id64)
 
-	movie, err := rh.queryService.GetMovieDetails(&id)
+	movie, err := rh.queryService.GetMovieDetails(context.Background(), &id)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, common.ErrorResponse{
 			Message: "movie is not found",
@@ -68,7 +69,7 @@ func (rh *ReaderHandler) GetMovie(c echo.Context) error {
 }
 
 func (rh *ReaderHandler) GetMovies(c echo.Context) error {
-	movies, err := rh.queryService.GetMovies()
+	movies, err := rh.queryService.GetMovies(context.Background())
 	if err != nil {
 		return c.JSON(http.StatusNotFound, common.ErrorResponse{
 			Message: "movies are not found",
@@ -85,7 +86,7 @@ func (wh *WriterHandler) CreateMovie(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	movie, err := wh.commandService.CreateMovie(&m)
+	movie, err := wh.commandService.CreateMovie(context.Background(), &m)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, common.ErrorResponse{
 			Message: "movie can not created",

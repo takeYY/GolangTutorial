@@ -1,8 +1,8 @@
 package movie
 
 import (
+	"context"
 	"golang_tutorial/config"
-	"golang_tutorial/db"
 )
 
 type QueryService struct {
@@ -10,12 +10,9 @@ type QueryService struct {
 }
 
 // 新しいQueryServiceを作成
-func NewQueryService(dbCfg *config.Database) *QueryService {
-	readerDBSession := db.ConnectDB(dbCfg)
-	readerTx := readerDBSession.Begin()
-
+func NewQueryService(cfg *config.Config) *QueryService {
 	var movieRepo IQueryRepository = &MovieRepository{
-		Session: readerTx,
+		dbCfg: &cfg.ReaderDatabase,
 	}
 
 	return &QueryService{
@@ -24,8 +21,8 @@ func NewQueryService(dbCfg *config.Database) *QueryService {
 }
 
 // 指定された映画IDの詳細情報を取得
-func (qs *QueryService) GetMovieDetails(movieID *int32) (*MovieResponse, error) {
-	movie, err := qs.MovieRepo.FindByID(movieID)
+func (qs *QueryService) GetMovieDetails(ctx context.Context, movieID *int32) (*MovieResponse, error) {
+	movie, err := qs.MovieRepo.FindByID(ctx, movieID)
 	if err != nil {
 		return nil, err
 	}
@@ -49,8 +46,8 @@ func (qs *QueryService) GetMovieDetails(movieID *int32) (*MovieResponse, error) 
 	return movieResponse, nil
 }
 
-func (qs *QueryService) GetMovies() ([]MovieResponse, error) {
-	result, err := qs.MovieRepo.Find()
+func (qs *QueryService) GetMovies(ctx context.Context) ([]MovieResponse, error) {
+	result, err := qs.MovieRepo.Find(ctx)
 	if err != nil {
 		return nil, err
 	}

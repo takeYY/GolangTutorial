@@ -88,7 +88,7 @@ func TestGetMovie(t *testing.T) {
 		if err != nil {
 			log.Fatalf("Error loading config: %v", err)
 		}
-		target := movie.NewHandler(&cfg.ReaderDatabase, &cfg.WriterDatabase)
+		target := movie.NewHandler(cfg)
 		er := target.ReaderHandler.GetMovie(c)
 		if er != nil {
 			t.Fatal(er)

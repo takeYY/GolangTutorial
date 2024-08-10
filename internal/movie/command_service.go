@@ -1,20 +1,17 @@
 package movie
 
 import (
+	"context"
 	"golang_tutorial/config"
-	"golang_tutorial/db"
 )
 
 type CommandService struct {
 	MovieRepo ICommandRepository
 }
 
-func NewCommandService(dbCfg *config.Database) *CommandService {
-	writerDBSession := db.ConnectDB(dbCfg)
-	writerTx := writerDBSession.Begin()
-
+func NewCommandService(cfg *config.Config) *CommandService {
 	var movieRepo ICommandRepository = &MovieRepository{
-		Session: writerTx,
+		dbCfg: &cfg.WriterDatabase,
 	}
 
 	return &CommandService{
@@ -22,8 +19,8 @@ func NewCommandService(dbCfg *config.Database) *CommandService {
 	}
 }
 
-func (cs *CommandService) CreateMovie(movie *NewMovie) (*MovieResponse, error) {
-	result, err := cs.MovieRepo.Save(movie)
+func (cs *CommandService) CreateMovie(ctx context.Context, movie *NewMovie) (*MovieResponse, error) {
+	result, err := cs.MovieRepo.Save(ctx, movie)
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,9 @@
 package movie
 
 import (
+	"context"
+	"golang_tutorial/config"
+	"golang_tutorial/db"
 	"golang_tutorial/model"
 	"golang_tutorial/query"
 
@@ -10,22 +13,24 @@ import (
 // 映画データのリポジトリインターフェース
 type (
 	IQueryRepository interface {
-		FindByID(id *int32) (*model.Movie, error)
-		Find() ([]*model.Movie, error)
+		FindByID(ctx context.Context, id *int32) (*model.Movie, error)
+		Find(ctx context.Context) ([]*model.Movie, error)
 	}
 	ICommandRepository interface {
-		Save(target *NewMovie) (*model.Movie, error)
-		Delete(id *string) error
+		Save(ctx context.Context, target *NewMovie) (*model.Movie, error)
+		Delete(ctx context.Context, id *string) error
 	}
 	MovieRepository struct {
-		Session *gorm.DB
+		dbCfg *config.Database
+		db    *gorm.DB
 	}
 )
 
-func (r *MovieRepository) FindByID(id *int32) (*model.Movie, error) {
-	m := query.Use(r.Session).Movie
+func (r *MovieRepository) FindByID(ctx context.Context, id *int32) (*model.Movie, error) {
+	r.db = db.ConnectDB(r.dbCfg)
+	m := query.Use(r.db).Movie
 
-	movie, e := m.Preload(m.Genres).Where(m.ID.Eq(*id)).First()
+	movie, e := m.WithContext(ctx).Preload(m.Genres).Where(m.ID.Eq(*id)).First()
 	if e != nil {
 		return nil, e
 	}
@@ -33,10 +38,11 @@ func (r *MovieRepository) FindByID(id *int32) (*model.Movie, error) {
 	return movie, nil
 }
 
-func (r *MovieRepository) Find() ([]*model.Movie, error) {
-	m := query.Use(r.Session).Movie
+func (r *MovieRepository) Find(ctx context.Context) ([]*model.Movie, error) {
+	r.db = db.ConnectDB(r.dbCfg)
+	m := query.Use(r.db).Movie
 
-	movies, e := m.Preload(m.Genres).Find()
+	movies, e := m.WithContext(ctx).Preload(m.Genres).Find()
 	if e != nil {
 		return nil, e
 	}
@@ -44,17 +50,18 @@ func (r *MovieRepository) Find() ([]*model.Movie, error) {
 	return movies, nil
 }
 
-func (r *MovieRepository) Save(target *NewMovie) (*model.Movie, error) {
+func (r *MovieRepository) Save(ctx context.Context, target *NewMovie) (*model.Movie, error) {
 	var err error
 	defer func() {
 		if err != nil {
-			r.Session.Rollback()
+			r.db.Rollback()
 		} else {
-			r.Session.Commit()
+			r.db.Commit()
 		}
 	}()
 
-	m := query.Use(r.Session).Movie
+	r.db = db.ConnectDB(r.dbCfg)
+	m := query.Use(r.db).Movie
 
 	movie := model.Movie{
 		Title:    target.Title,
@@ -69,6 +76,6 @@ func (r *MovieRepository) Save(target *NewMovie) (*model.Movie, error) {
 	return &movie, nil
 }
 
-func (r *MovieRepository) Delete(id *string) error {
+func (r *MovieRepository) Delete(ctx context.Context, id *string) error {
 	return nil
 }

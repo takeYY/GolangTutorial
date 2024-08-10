@@ -23,7 +23,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// ハンドラの設定
-	movieHandler := movie.NewHandler(&cfg.ReaderDatabase, &cfg.WriterDatabase)
+	movieHandler := movie.NewHandler(cfg)
 	movieHandler.RegisterRoutes(e)
 
 	// サーバーの起動
