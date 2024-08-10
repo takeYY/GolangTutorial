@@ -25,7 +25,10 @@ jobs:
         run: |
           make build
 
+      - name: Run Container
+        run: |
+          docker compose --env-file .env up -d
+
       - name: Run Tests in Container
         run: |
-          sudo chown -R 1000:1000 ${{ github.workspace }}
-          make test
+          docker compose --env-file .env exec golang_tutorial_api gotest -v ./tests/... -cover
