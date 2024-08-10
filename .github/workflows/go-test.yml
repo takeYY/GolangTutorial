@@ -29,6 +29,13 @@ jobs:
         run: |
           docker compose --env-file .env up -d
 
+      - name: Wait for DB Container Ready
+        run: |
+          while ! docker compose exec -T golang_tutorial_db mysql -e "SELECT 1" >/dev/null 2>&1
+          do
+            sleep 1
+          done
+
       - name: Run Tests in Container
         run: |
           docker compose --env-file .env exec golang_tutorial_api gotest -v ./tests/... -cover
