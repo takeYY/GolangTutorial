@@ -29,10 +29,6 @@ jobs:
         run: |
           docker compose --env-file .env up -d
 
-      - name: Wait for Container Ready
-        run: |
-          sleep 60
-
       - name: Run Tests in Container
         run: |
-          docker compose --env-file .env exec golang_tutorial_api gotest -v ./tests/... -cover
+          docker compose --env-file .env exec api gotest -v ./tests/... -cover
