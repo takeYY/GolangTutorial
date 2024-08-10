@@ -6,7 +6,7 @@ import (
 )
 
 type QueryService struct {
-	MovieRepo IRepository
+	MovieRepo IQueryRepository
 }
 
 // 新しいQueryServiceを作成
@@ -14,7 +14,7 @@ func NewQueryService(dbCfg *config.Database) *QueryService {
 	readerDBSession := db.ConnectDB(dbCfg)
 	readerTx := readerDBSession.Begin()
 
-	var movieRepo IRepository = &MovieRepository{
+	var movieRepo IQueryRepository = &MovieRepository{
 		Session: readerTx,
 	}
 

@@ -8,15 +8,18 @@ import (
 )
 
 // 映画データのリポジトリインターフェース
-type IRepository interface {
-	FindByID(id *int32) (*model.Movie, error)
-	Save(movie *model.Movie) error
-	Delete(id *string) error
-}
-
-type MovieRepository struct {
-	Session *gorm.DB
-}
+type (
+	IQueryRepository interface {
+		FindByID(id *int32) (*model.Movie, error)
+	}
+	ICommandRepository interface {
+		Save(movie *model.Movie) error
+		Delete(id *string) error
+	}
+	MovieRepository struct {
+		Session *gorm.DB
+	}
+)
 
 func (r *MovieRepository) FindByID(id *int32) (*model.Movie, error) {
 	m := query.Use(r.Session).Movie
