@@ -11,12 +11,12 @@ services:
       - 8000:8000
     volumes:
       - .:/usr/src/app
-    command: >
-      bash -c 'sleep 60 && go run ./cmd/server/main.go'
+    command: go run ./cmd/server/main.go
     env_file:
       - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: mysql:8.0.32
@@ -32,6 +32,10 @@ services:
       MYSQL_PASSWORD: "password"
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "db4test"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
+      interval: 10s
+      retries: 10
 
 volumes:
   mysql-volumes:
