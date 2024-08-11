@@ -5,10 +5,26 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"gopkg.in/go-playground/validator.v9"
 
 	"golang_tutorial/config"
 	"golang_tutorial/internal/movie"
 )
+
+// CustomValidator
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
+// NewValidator
+func NewValidator() echo.Validator {
+	return &CustomValidator{validator: validator.New()}
+}
+
+// Validate validate
+func (cv *CustomValidator) Validate(i interface{}) error {
+	return cv.validator.Struct(i)
+}
 
 func main() {
 	// 設定ファイルの読み込み
@@ -18,6 +34,7 @@ func main() {
 	}
 
 	e := echo.New()
+	e.Validator = NewValidator()
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())

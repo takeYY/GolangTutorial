@@ -83,7 +83,14 @@ func (rh *ReaderHandler) GetMovies(c echo.Context) error {
 func (wh *WriterHandler) CreateMovie(c echo.Context) error {
 	var m NewMovie
 	if err := c.Bind(&m); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, common.ErrorResponse{
+			Message: err.Error(),
+		})
+	}
+	if err := c.Validate(&m); err != nil {
+		return c.JSON(http.StatusBadRequest, common.ErrorResponse{
+			Message: err.Error(),
+		})
 	}
 
 	movie, err := wh.commandService.CreateMovie(context.Background(), &m)
